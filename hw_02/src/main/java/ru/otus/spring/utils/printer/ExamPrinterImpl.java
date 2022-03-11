@@ -1,35 +1,35 @@
-package ru.otus.spring.utils;
+package ru.otus.spring.utils.printer;
 
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import ru.otus.spring.model.Answer;
 import ru.otus.spring.model.Exam;
 import ru.otus.spring.model.Line;
-import ru.otus.spring.utils.printer.ExamPrinter;
-import ru.otus.spring.utils.printer.IncorrectBorderValueException;
-import ru.otus.spring.utils.printer.NotFinishedExamException;
+import ru.otus.spring.utils.reader.CsvReader;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class ExamPrinterImpl implements ExamPrinter {
-    private final Exam exam;
-    private final int passBorder;
-    private final BufferedReader in;
+
     private final PrintStream out;
+    private final LineReader lineReader;
+    private final Exam exam;
+
+    @Value("${passBorder}")
+    private int passBorder;
     private int correctAnswerCounter;
     private boolean examResult;
     private boolean isExamFinished;
 
-    public ExamPrinterImpl(Exam exam, BufferedReader in, PrintStream out) {
-        this.exam = exam;
-        this.in = in;
+    public ExamPrinterImpl(LineReader lineReader, CsvReader csvReader, PrintStream out) throws Exception {
+        this.lineReader = lineReader;
         this.out = out;
-        final int passBorder = exam.getPassBorder();
+        exam = csvReader.getAsExam(passBorder);
         checkBorderValue(passBorder);
-        this.passBorder = passBorder;
     }
 
     /**
@@ -40,9 +40,9 @@ public class ExamPrinterImpl implements ExamPrinter {
     public void print() {
         out.println("Welcome to java basic exam!".toUpperCase());
         out.println("Please enter firstName:");
-        String firstName = readLine();
+        String firstName = lineReader.readLine();
         out.println("Please enter lastName:");
-        String lastName = readLine();
+        String lastName = lineReader.readLine();
         out.println("Hello, " + firstName + " " + lastName);
         exam.getLines().forEach(this::accept);
         final int userResult = getPercentageOfCompletion();
@@ -51,13 +51,13 @@ public class ExamPrinterImpl implements ExamPrinter {
         printExamResult(firstName, lastName, userResult);
     }
 
-    private String readLine() throws IOException {
-        String line = null;
-        StringBuilder rslt = new StringBuilder();
-        if ((line = in.readLine()) != null) {
-            rslt.append(line);
+    @Override
+    public boolean getExamResult() {
+        if (!isExamFinished) {
+            throw new NotFinishedExamException("Not possible to show result of exam. Exam is not finished");
+        } else {
+            return examResult;
         }
-        return rslt.toString();
     }
 
     private void printExamResult(String firstName, String lastName, int userResult) {
@@ -68,15 +68,6 @@ public class ExamPrinterImpl implements ExamPrinter {
             out.println("Congratulation! You pass the exam".toUpperCase());
         } else {
             out.println("You failed the exam. Try again later...".toUpperCase());
-        }
-    }
-
-    @Override
-    public boolean getExamResult() {
-        if (!isExamFinished) {
-            throw new NotFinishedExamException("Not possible to show result of exam. Exam is not finished");
-        } else {
-            return examResult;
         }
     }
 
@@ -91,7 +82,7 @@ public class ExamPrinterImpl implements ExamPrinter {
     @SneakyThrows
     private void proceedUserAnswerLetter(Character correctAnswerLetter) {
         out.println("Enter the correct answer letter A B C or D ...");
-        String userAnswer = readLine();
+        String userAnswer = lineReader.readLine();
         if (userAnswer.length() > 0) {
             if (correctAnswerLetter.equals(userAnswer.toUpperCase().charAt(0))) {
                 out.println("You answer is CORRECT");

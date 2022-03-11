@@ -1,6 +1,7 @@
 package ru.otus.spring.utils.reader;
 
 import com.opencsv.CSVReader;
+import org.springframework.stereotype.Service;
 import ru.otus.spring.model.Answer;
 import ru.otus.spring.model.Exam;
 import ru.otus.spring.model.Line;
@@ -14,13 +15,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+@Service
 public class CsvReaderImpl implements CsvReader {
     private final CSVReader csvReader;
     private final FileReader fileReader;
 
     public CsvReaderImpl(CSVReader csvReader, FileReader fileReader) {
-        this.fileReader = fileReader;
         this.csvReader = csvReader;
+        this.fileReader = fileReader;
     }
 
     /**
