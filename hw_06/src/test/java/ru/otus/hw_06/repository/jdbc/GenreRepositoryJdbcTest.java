@@ -29,14 +29,14 @@ public class GenreRepositoryJdbcTest {
     }
 
 
-    @Test
-    @Order(2)
-    void shouldUpdateNameById() {
-        final String expectedName = EXISTING_GENRE_NAME + " updated";
-        genreRepositoryJdbc.updateNameById(EXISTING_GENRE_ID, expectedName);
-        final Genre actualGenre = genreRepositoryJdbc.findById(EXISTING_GENRE_ID);
-        assertThat(actualGenre.getName()).isEqualTo(expectedName);
-    }
+//    @Test
+//    @Order(2)
+//    void shouldUpdateNameById() {
+//        final String expectedName = EXISTING_GENRE_NAME + " updated";
+//        genreRepositoryJdbc.updateNameById(EXISTING_GENRE_ID, expectedName);
+//        final Genre actualGenre = genreRepositoryJdbc.findById(EXISTING_GENRE_ID);
+//        assertThat(actualGenre.getName()).isEqualTo(expectedName);
+//    }
 
     @Test
     @Order(3)

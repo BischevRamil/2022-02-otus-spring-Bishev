@@ -3,15 +3,12 @@ package ru.otus.hw_06.repository.jdbc;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.hw_06.model.Author;
 import ru.otus.hw_06.model.Book;
+import ru.otus.hw_06.model.Genre;
 import ru.otus.hw_06.repository.BookRepository;
-import ru.otus.hw_06.repository.jdbc.exception.BookNotFoundException;
 
-import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,47 +38,21 @@ public class BookRepositoryJdbc implements BookRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Book findById(long id) {
-        final Optional<Book> optionalBook = Optional.ofNullable(em.find(Book.class, id));
-        if (optionalBook.isPresent()) {
-            return optionalBook.get();
-        } else {
-            throw new BookNotFoundException("Book with id=" + "'" + id + " not found");
-        }
+    public Optional<Book> findById(long id) {
+        return Optional.ofNullable(em.find(Book.class, id));
     }
 
 
     @Override
     @Transactional(readOnly = true)
     public List<Book> findAll() {
-        EntityGraph<?> entityGraph = em.getEntityGraph("book-author-genre-entity-graph");
-        final TypedQuery<Book> query = em.createQuery("select b from Book b", Book.class);
-        query.setHint("javax.persistence.fetchgraph", entityGraph);
-        return query.getResultList();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Book> findAll(Author author) {
-        return author.getBooks();
-    }
-
-    @Override
-    @Transactional
-    public void updateTitleById(long id, String title) {
-        findById(id).setTitle(title);
-    }
-
-    @Override
-    @Transactional
-    public void updateCommentById(long id, String comment) {
-        findById(id).setComment(comment);
+        return em.createQuery("select b from Book b", Book.class).getResultList();
     }
 
     @Override
     @Transactional
     public void deleteById(long id) {
         Book book = em.find(Book.class, id);
-        em.remove(em.merge(book));
+        em.remove(book);
     }
 }

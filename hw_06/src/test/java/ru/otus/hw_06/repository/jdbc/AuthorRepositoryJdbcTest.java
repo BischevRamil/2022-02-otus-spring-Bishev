@@ -31,19 +31,18 @@ public class AuthorRepositoryJdbcTest {
 
     @Test
     @Order(2)
-    void shouldUpdateNameById() {
-        final String expectedName = EXISTING_AUTHOR_NAME + " updated";
-        authorRepositoryJdbc.updateNameById(EXISTING_AUTHOR_ID, expectedName);
-        final Author actualAuthor = authorRepositoryJdbc.findById(EXISTING_AUTHOR_ID);
-        assertThat(actualAuthor.getName()).isEqualTo(expectedName);
-    }
-
-    @Test
-    @Order(3)
     void shouldFindById() {
         Author newAuthor = new Author(6, EXISTING_AUTHOR_NAME + " 2", null);
         authorRepositoryJdbc.save(newAuthor);
         assertThat(authorRepositoryJdbc.findById(6)).isEqualTo(newAuthor);
+    }
+
+    @Test
+    @Order(3)
+    void shouldFindByName() {
+        Author newAuthor = new Author(6, EXISTING_AUTHOR_NAME + " 2", null);
+        authorRepositoryJdbc.save(newAuthor);
+        assertThat(authorRepositoryJdbc.findByName(EXISTING_AUTHOR_NAME).get()).isEqualTo(newAuthor);
     }
 
     @Test

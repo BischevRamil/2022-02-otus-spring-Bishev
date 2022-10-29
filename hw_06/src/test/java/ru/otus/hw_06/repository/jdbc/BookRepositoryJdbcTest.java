@@ -53,43 +53,18 @@ public class BookRepositoryJdbcTest {
     }
 
     @Test
-    @Order(3)
-    void shouldFindAllByAuthors() {
-        assertThat(bookRepository.findAll(newAuthor)
-                .size()).isEqualTo(0);
-    }
-
-    @Test
     @Order(4)
     void shouldAddSeveralBooks() {
         bookRepository.save(newBook);
         bookRepository.save(newBook2);
-        assertThat(bookRepository.findById(NEW_BOOK_ID)).isEqualTo(newBook);
-        assertThat(bookRepository.findById(NEW_BOOK2_ID)).isEqualTo(newBook2);
+        assertThat(bookRepository.findById(NEW_BOOK_ID).get()).isEqualTo(newBook);
+        assertThat(bookRepository.findById(NEW_BOOK2_ID).get()).isEqualTo(newBook2);
     }
 
     @Test
     @Order(5)
     void shouldFindById() {
-        assertThat(bookRepository.findById(NEW_BOOK_ID)).isEqualTo(newBook);
-    }
-
-    @Test
-    @Order(6)
-    void shouldUpdateTitle() {
-        final String expectedTitle = NEW_BOOK_TITLE + " updated";
-        bookRepository.updateTitleById(NEW_BOOK_ID, expectedTitle);
-        final Book actualBook = bookRepository.findById(NEW_BOOK_ID);
-        assertThat(actualBook.getTitle()).isEqualTo(expectedTitle);
-    }
-
-    @Test
-    @Order(7)
-    void shouldUpdateComment() {
-        final String expectedComment = NEW_BOOK_COMMENT + " updated";
-        bookRepository.updateCommentById(NEW_BOOK_ID, expectedComment);
-        final Book actualBook = bookRepository.findById(NEW_BOOK_ID);
-        assertThat(actualBook.getComment()).isEqualTo(expectedComment);
+        assertThat(bookRepository.findById(NEW_BOOK_ID).get()).isEqualTo(newBook);
     }
 
     @Test
@@ -105,7 +80,7 @@ public class BookRepositoryJdbcTest {
     @Order(9)
     void shouldAlsoUpdateAuthorWhenBookAdded() {
         bookRepository.save(newBook);
-        final Author author = authorRepository.findByName(NEW_BOOK_AUTHOR_NAME);
+        final Author author = authorRepository.findByName(NEW_BOOK_AUTHOR_NAME).get();
         System.out.println(author);
         assertThat(author.getBooks().size()).isEqualTo(2);
     }

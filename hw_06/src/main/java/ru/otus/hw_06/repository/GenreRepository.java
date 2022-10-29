@@ -3,6 +3,7 @@ package ru.otus.hw_06.repository;
 import ru.otus.hw_06.model.Genre;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GenreRepository {
 
@@ -10,11 +11,9 @@ public interface GenreRepository {
 
     List<Genre> findAll();
 
-    Genre findByName(String name);
-
-    void updateNameById(long id, String name);
+    Optional<Genre> findByName(String name);
 
     void deleteById(long id);
 
-    Genre findById(long id);
+    Optional<Genre> findById(long id);
 }
