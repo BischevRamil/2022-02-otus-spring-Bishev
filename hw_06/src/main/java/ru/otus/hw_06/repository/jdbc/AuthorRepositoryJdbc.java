@@ -1,7 +1,6 @@
 package ru.otus.hw_06.repository.jdbc;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw_06.model.Author;
 import ru.otus.hw_06.repository.AuthorRepository;
 
@@ -18,7 +17,6 @@ public class AuthorRepositoryJdbc implements AuthorRepository {
     private EntityManager em;
 
     @Override
-    @Transactional
     public Author save(Author author) {
         if (author.getId() <= 0) {
             em.persist(author);
@@ -29,13 +27,11 @@ public class AuthorRepositoryJdbc implements AuthorRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Author> findAll() {
         return em.createQuery("select a from Author a", Author.class).getResultList();
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<Author> findByName(String name) {
         TypedQuery<Author> query = em.createQuery("select a from Author a where a.name = :name", Author.class);
         query.setParameter("name", name);
@@ -43,7 +39,6 @@ public class AuthorRepositoryJdbc implements AuthorRepository {
     }
 
     @Override
-    @Transactional
     public void deleteById(long id) {
         Author author = em.find(Author.class, id);
         em.remove(author);

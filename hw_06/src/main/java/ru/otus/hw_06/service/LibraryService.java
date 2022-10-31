@@ -2,6 +2,7 @@ package ru.otus.hw_06.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw_06.model.Author;
 import ru.otus.hw_06.model.Book;
 import ru.otus.hw_06.model.Genre;
@@ -28,6 +29,7 @@ public class LibraryService {
         return bookRepository.count();
     }
 
+    @Transactional
     public void newBookSave(String title, String comment, String authorName, String genreName) {
         var author = authorRepository
                 .findByName(authorName)
@@ -65,6 +67,7 @@ public class LibraryService {
         return authorRepository.findByName(name).orElseThrow().getBooks();
     }
 
+    @Transactional
     public void updateBookTitleById(long id, String title) {
         var book = bookRepository
                 .findById(id)
@@ -73,6 +76,7 @@ public class LibraryService {
         bookRepository.save(book);
     }
 
+    @Transactional
     public void updateCommentById(long id, String comment) {
         var book = bookRepository
                 .findById(id)
