@@ -60,9 +60,19 @@ public class ApplicationCommands {
         service.updateBookTitleById(id, title);
     }
 
+    @ShellMethod(value = "addc -id 'id' 'book comment'", key = {"addc"})
+    public void addCommentById(@ShellOption(value = {"-id"}) long id, String comment) {
+        service.addCommentById(id, comment);
+    }
+
     @ShellMethod(value = "updatec -id 'id' 'book comment'", key = {"updatec"})
     public void updateCommentById(@ShellOption(value = {"-id"}) long id, String comment) {
         service.updateCommentById(id, comment);
+    }
+
+    @ShellMethod(value = "deletec -id", key = {"deletec"})
+    public void deleteCommentById(@ShellOption(value = {"-id"}) long id) {
+        service.deleteCommentById(id);
     }
 
     @ShellMethod(value = "delete -id", key = {"delete"})

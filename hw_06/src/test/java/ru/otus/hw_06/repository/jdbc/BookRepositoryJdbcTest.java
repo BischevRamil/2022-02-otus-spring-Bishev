@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.otus.hw_06.model.Author;
 import ru.otus.hw_06.model.Book;
+import ru.otus.hw_06.model.Comment;
 import ru.otus.hw_06.model.Genre;
 
 import java.util.Collections;
@@ -25,7 +26,7 @@ public class BookRepositoryJdbcTest {
     private static final long NEW_BOOK_ID = 4;
     private static final long NEW_BOOK2_ID = 5;
     private static final String NEW_BOOK_TITLE = "Thinking in java";
-    private static final String NEW_BOOK_COMMENT = "Comment";
+    private static final List<Comment> NEW_BOOK_COMMENT = List.of(new Comment("Comment"));
     private static final long NEW_BOOK_AUTHOR_ID = 4;
     private static final String NEW_BOOK_AUTHOR_NAME = "Super Author";
     private static final long NEW_BOOK_GENRE_ID = 2;
@@ -33,7 +34,7 @@ public class BookRepositoryJdbcTest {
     private final Author newAuthor = new Author(NEW_BOOK_AUTHOR_ID, NEW_BOOK_AUTHOR_NAME, Collections.emptyList());
     private final Book newBook = new Book(NEW_BOOK_ID, NEW_BOOK_TITLE, NEW_BOOK_COMMENT, newAuthor,
             new Genre(NEW_BOOK_GENRE_ID, NEW_BOOK_GENRE_NAME));
-    private final Book newBook2 = new Book(NEW_BOOK2_ID, NEW_BOOK_TITLE + "2", NEW_BOOK_COMMENT + "2", newAuthor,
+    private final Book newBook2 = new Book(NEW_BOOK2_ID, NEW_BOOK_TITLE + "2", NEW_BOOK_COMMENT, newAuthor,
             new Genre(NEW_BOOK_GENRE_ID, NEW_BOOK_GENRE_NAME));
     @Autowired
     private BookRepositoryJdbc bookRepository;

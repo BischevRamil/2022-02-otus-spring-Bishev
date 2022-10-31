@@ -5,12 +5,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw_06.model.Author;
 import ru.otus.hw_06.model.Book;
+import ru.otus.hw_06.model.Comment;
 import ru.otus.hw_06.model.Genre;
 import ru.otus.hw_06.repository.AuthorRepository;
 import ru.otus.hw_06.repository.BookRepository;
+import ru.otus.hw_06.repository.CommentRepository;
 import ru.otus.hw_06.repository.GenreRepository;
+import ru.otus.hw_06.repository.jdbc.CommentRepositoryJdbc;
 import ru.otus.hw_06.repository.jdbc.exception.AuthorNotFoundException;
 import ru.otus.hw_06.repository.jdbc.exception.BookNotFoundException;
+import ru.otus.hw_06.repository.jdbc.exception.CommentNotFoundException;
 import ru.otus.hw_06.repository.jdbc.exception.GenreNotFoundException;
 
 import java.util.List;
@@ -24,6 +28,8 @@ public class LibraryService {
     private final AuthorRepository authorRepository;
 
     private final GenreRepository genreRepository;
+
+    private final CommentRepository commentRepository;
 
     public Long getBooksCount() {
         return bookRepository.count();
@@ -39,7 +45,7 @@ public class LibraryService {
                 .orElseThrow(() -> new GenreNotFoundException(String.format("Author with name '%s' not found", genreName)));
         var book = new Book();
         book.setTitle(title);
-        book.setComment(comment);
+        book.getComments().add(new Comment(comment));
         book.setAuthor(author);
         book.setGenre(genre);
         bookRepository.save(book);
@@ -77,12 +83,26 @@ public class LibraryService {
     }
 
     @Transactional
-    public void updateCommentById(long id, String comment) {
+    public void addCommentById(long id, String comment) {
         var book = bookRepository
                 .findById(id)
                 .orElseThrow(() -> new BookNotFoundException(String.format("Book with id = %s not found", id)));
-        book.setComment(comment);
+        book.getComments().add(new Comment(comment));
         bookRepository.save(book);
+    }
+
+    @Transactional
+    public void updateCommentById(long id, String comment) {
+        var commentEntity = commentRepository
+                .findById(id)
+                .orElseThrow(() -> new CommentNotFoundException(String.format("Comment with id = %s not found", id)));
+        commentEntity.setComment(comment);
+        commentRepository.save(commentEntity);
+    }
+
+    @Transactional
+    public void deleteCommentById(long id) {
+        commentRepository.deleteById(id);
     }
 
     public void bookDeleteById(long id) {
