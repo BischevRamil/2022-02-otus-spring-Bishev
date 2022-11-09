@@ -28,7 +28,7 @@ public class Author {
 
     @Fetch(FetchMode.SELECT)
     @BatchSize(size = 5)
-    @OneToMany(targetEntity = Book.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "author")
+    @OneToMany(targetEntity = Book.class, cascade = CascadeType.ALL, mappedBy = "author")
     private List<Book> books;
 
 }

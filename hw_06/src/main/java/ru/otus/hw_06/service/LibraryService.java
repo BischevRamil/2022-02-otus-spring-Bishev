@@ -11,7 +11,6 @@ import ru.otus.hw_06.repository.AuthorRepository;
 import ru.otus.hw_06.repository.BookRepository;
 import ru.otus.hw_06.repository.CommentRepository;
 import ru.otus.hw_06.repository.GenreRepository;
-import ru.otus.hw_06.repository.jdbc.CommentRepositoryJdbc;
 import ru.otus.hw_06.repository.jdbc.exception.AuthorNotFoundException;
 import ru.otus.hw_06.repository.jdbc.exception.BookNotFoundException;
 import ru.otus.hw_06.repository.jdbc.exception.CommentNotFoundException;
@@ -69,6 +68,7 @@ public class LibraryService {
         return genreRepository.findAll();
     }
 
+    @Transactional
     public List<Book> findAllBooksByAuthor(String name) {
         return authorRepository.findByName(name).orElseThrow().getBooks();
     }
