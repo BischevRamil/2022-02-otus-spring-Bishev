@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+  data:
+    mongodb:
+      database: library
+      port: 0
+  sql:
+    init:
+      mode: always
+mongock:
+  #runner-type: "ApplicationRunner" # default
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.hw_09.mongock.changelog
