@@ -9,7 +9,6 @@ import ru.otus.hw_08.models.Comment;
 import ru.otus.hw_08.models.Genre;
 import ru.otus.hw_08.repositories.AuthorRepository;
 import ru.otus.hw_08.repositories.BookRepository;
-import ru.otus.hw_08.repositories.CommentRepository;
 import ru.otus.hw_08.repositories.GenreRepository;
 
 import java.time.LocalDate;
@@ -25,9 +24,9 @@ public class DatabaseChangelog {
 
     @ChangeSet(order = "002", id = "insertData", author = "dmitry")
     public void insertData(AuthorRepository authorRepository, GenreRepository genreRepository,
-                           BookRepository bookRepository, CommentRepository commentRepository) {
+                           BookRepository bookRepository) {
 
-        Genre genre1 = new Genre("Сomputer science");
+        Genre genre1 = new Genre("Computer science");
         Genre genre2 = new Genre("Other");
         genreRepository.save(genre1);
         genreRepository.save(genre2);
@@ -36,10 +35,6 @@ public class DatabaseChangelog {
         Comment comment2 = new Comment("It's a great book!", LocalDate.now());
         Comment comment3 = new Comment("Boring book...", LocalDate.now());
         Comment comment4 = new Comment("Pretty nice", LocalDate.now());
-        commentRepository.save(comment1);
-        commentRepository.save(comment2);
-        commentRepository.save(comment3);
-        commentRepository.save(comment4);
 
         final Book book1 = new Book("Thinking in java", genre1, List.of(comment1, comment2));
         final Book book2 = new Book("Learn Python the Hard Way", genre1, List.of(comment1, comment3, comment4));

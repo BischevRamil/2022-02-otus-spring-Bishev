@@ -13,18 +13,18 @@ import ru.otus.hw_08.models.Comment;
 import ru.otus.hw_08.models.Genre;
 import ru.otus.hw_08.repositories.AuthorRepository;
 import ru.otus.hw_08.repositories.BookRepository;
-import ru.otus.hw_08.repositories.CommentRepository;
 import ru.otus.hw_08.repositories.GenreRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @ShellComponent
 @AllArgsConstructor
 public class ApplicationCommands {
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
-    private final CommentRepository commentRepository;
     private final GenreRepository genreRepository;
 
     /**
@@ -140,7 +140,11 @@ public class ApplicationCommands {
     @ShellMethod(value = "comment --create -text 'comment text'",
             key = {"comment --create"})
     public void createComment(@ShellOption(value = {"-text"}) String commentText, @ShellOption(value = {"-book_id"}) String bookId) {
-        commentRepository.save(new Comment(commentText, LocalDate.now()));
+        Optional<Book> byId = bookRepository.findById(bookId);
+        if (byId.isPresent()) {
+            byId.get().getComments().add(new Comment(commentText, LocalDate.now()));
+            bookRepository.save(byId.get());
+        }
     }
 
     /**
@@ -148,6 +152,6 @@ public class ApplicationCommands {
      */
     @ShellMethod(value = "comment --find --all", key = {"comment --find --all"})
     public List<Comment> findAllComments() {
-        return commentRepository.findAll();
+        return bookRepository.findAll().stream().flatMap(book -> book.getComments().stream()).collect(Collectors.toList());
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import ru.otus.hw_08.repositories.AuthorRepository;
 import ru.otus.hw_08.repositories.BookRepository;
-import ru.otus.hw_08.repositories.CommentRepository;
 import ru.otus.hw_08.repositories.GenreRepository;
 
 @EnableMongoRepositories(basePackages = "ru.otus.hw_08.repositories")
@@ -32,11 +31,6 @@ public class Hw08Application {
         System.out.println("Жанры в БД:");
         GenreRepository genreRepository = context.getBean(GenreRepository.class);
         genreRepository.findAll().forEach(System.out::println);
-        System.out.println("\n\n----------------------------------------------");
-
-        System.out.println("Комментарии в БД:");
-        CommentRepository commentRepository = context.getBean(CommentRepository.class);
-        commentRepository.findAll().forEach(System.out::println);
         System.out.println("\n\n----------------------------------------------");
     }
 
